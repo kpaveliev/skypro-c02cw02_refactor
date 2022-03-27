@@ -11,6 +11,16 @@ def get_data(filename: str)-> list:
         data = json.load(file)
     return data
 
+def write_data(filename: str, data: dict):
+    """Save data to a json file
+
+    Arguments:
+    filename -- path to a file
+    data - data to append
+    """
+    with open(filename, mode='w', encoding='utf-8') as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
 def get_posts_by_user(filename: str, user_name: str)-> list:
     """Create list of posts by specific user from a json file
 
@@ -32,6 +42,21 @@ def get_post_by_id(filename: str, post_id: int)-> dict:
     posts = get_data(filename)
     post_found = posts[post_id - 1]
     return post_found
+
+def format_post_tags(post: dict)-> dict:
+    """Replace post tags in the post content with html links"""
+    content = post['content'].split(' ')
+    content_tagged = []
+
+    for word in content:
+        if word[0] == '#':
+            content_tagged.append(f'<a href="/tag/{word[1:]}">{word}</a>')
+        else:
+            content_tagged.append(word)
+
+    post['content'] = (' ').join(content_tagged)
+
+    return post
 
 def get_posts_for_word(filename: str, searched_word: str)-> list:
     """Get all posts which contain specific word from a json file
@@ -66,7 +91,10 @@ if __name__ == '__main__':
     posts = get_posts_by_user('data/data.json', 'larry')
     print(posts)
     # get_post_by_pk
-    post = get_post_by_id('data/data.json', 2)
+    post = get_post_by_id('data/data.json', 5)
+    print(post)
+    # format_post_tags
+    post = format_post_tags(post)
     print(post)
     # get_posts_for_word
     posts = get_posts_for_word('data/data.json', 'тарелка')

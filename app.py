@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from utils import *
 
 # Key variables
@@ -20,6 +20,19 @@ def post_by_id(post_id):
     post = get_post_by_id(POSTS, post_id)
     comments = get_comments_by_post_id(COMMENTS, post_id)
     return render_template('post.html', post=post, comments=comments)
+
+
+@app.route("/users/<user_name>")
+def posts_by_user(user_name):
+    posts = get_posts_by_user(POSTS, user_name)
+    return render_template('user-feed.html', posts=posts, user_name=user_name)
+
+
+@app.route("/search")
+def posts_search():
+    searched_word = request.args.get('s')
+    posts_found = get_posts_for_word(POSTS, searched_word)
+    return render_template('search.html', posts=posts_found)
 
 # Add a route to display images from uploads folder
 # @app.route("/resources/uploads/<path:path>")

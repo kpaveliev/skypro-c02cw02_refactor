@@ -41,7 +41,7 @@ def get_posts_for_word(filename: str, searched_word: str)-> list:
     searched_word -- id of the post
     """
     posts = get_data(filename)
-    posts_found = [post for post in posts if searched_word.lower() in post['content']]
+    posts_found = [post for post in posts if searched_word.lower() in post['content'].lower()]
     return posts_found
 
 # Functions for comments

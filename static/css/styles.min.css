@@ -427,7 +427,7 @@ textarea {
 
 .item__bookmark-btn.active,
 .item__bookmark-btn:hover {
-	opacity: 1
+	opacity: 1;
 }
 
 .item__top .item__bookmark-btn {

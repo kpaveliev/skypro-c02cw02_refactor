@@ -1,6 +1,6 @@
 import json
 
-# Functions for posts
+# Functions for files
 def get_data(filename: str)-> list:
     """Create list of all data from a json file
 
@@ -21,6 +21,7 @@ def write_data(filename: str, data: dict):
     with open(filename, mode='w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
+# Functions for posts
 def get_posts_by_user(filename: str, user_name: str)-> list:
     """Create list of posts by specific user from a json file
 
@@ -40,7 +41,12 @@ def get_post_by_id(filename: str, post_id: int)-> dict:
     post_id -- id of the post
     """
     posts = get_data(filename)
-    post_found = posts[post_id - 1]
+    post_found = None
+
+    for post in posts:
+        if post['pk'] == post_id:
+            post_found = post
+
     return post_found
 
 def format_post_tags(post: dict)-> dict:
@@ -50,7 +56,7 @@ def format_post_tags(post: dict)-> dict:
 
     for word in content:
         if word[0] == '#':
-            content_tagged.append(f'<a href="/tag/{word[1:]}">{word}</a>')
+            content_tagged.append(f'<a href="/tag/{word[1:]}" class="item__tag">{word}</a>')
         else:
             content_tagged.append(word)
 

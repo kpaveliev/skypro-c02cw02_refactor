@@ -102,8 +102,8 @@ if __name__ == '__main__':
     # format_post_tags
     post = format_post_tags(post)
     print(post)
-    # get_posts_for_word
-    posts = get_posts_for_word('data/data.json', 'тарелка')
+    print('get_posts_for_word')
+    posts = get_posts_for_word('data/data.json', 'вокруг было')
     print(posts)
     # get_comments_by_post_id
     comments = get_comments_by_post_id('data/comments.json', 1)

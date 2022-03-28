@@ -27,7 +27,8 @@ def post_by_id(post_id):
     post = get_post_by_id(POSTS, post_id)
     tagged_post = format_post_tags(post)
     comments = get_comments_by_post_id(COMMENTS, post_id)
-    return render_template('post.html', post=tagged_post, comments=comments)
+    bookmarks = get_data(BOOKMARKS)
+    return render_template('post.html', post=tagged_post, bookmarks=bookmarks, comments=comments)
 
 
 # Views by user, tag, search by word
@@ -52,10 +53,15 @@ def posts_by_tag(tag_name):
 @app.route("/search")
 def posts_search():
     """Page with all the posts containing some word"""
-    searched_word = request.args.get('s')
-    posts_found = get_posts_for_word(POSTS, searched_word)
-    bookmarks = get_data(BOOKMARKS)
-    return render_template('search.html', posts=posts_found, bookmarks=bookmarks)
+    try:
+        searched_word = request.args.get('s')
+        posts_found = get_posts_for_word(POSTS, searched_word)
+        bookmarks = get_data(BOOKMARKS)
+    except:
+        # Allow opening without arguments
+        return render_template('search.html', posts=[], bookmarks=[])
+    else:
+        return render_template('search.html', posts=posts_found, bookmarks=bookmarks)
 
 
 # Views for bookmarks

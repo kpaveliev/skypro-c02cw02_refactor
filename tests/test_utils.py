@@ -5,15 +5,16 @@ path = os.path.abspath('.')
 sys.path.insert(1, path)
 
 from utils import *
-from app import POSTS, COMMENTS, BOOKMARKS
+from app import POSTS, COMMENTS
 
 
 # Define tests for functions
 def test_get_data():
     """Check if json loads correctly"""
     posts = get_data(POSTS)
-    assert len(posts) == 8, "Ошибка загрузки файла"
-    assert posts[0]['poster_name'] == 'leo', "Ошибка загрузки файла"
+    keys_to_check = ('poster_name', 'poster_avatar', 'pic', 'content', 'views_count', 'likes_count', 'pk')
+    assert isinstance(posts, list), "Ошибка загрузки файла: полученный объект не является списком"
+    assert tuple(posts[0].keys()) == keys_to_check, "Ошибка загрузки файла: элементы списка не содержат нужные ключи"
 
 def test_get_data_exception():
     """Check if FileNotFoundError is raised correctly"""
@@ -22,22 +23,28 @@ def test_get_data_exception():
 
 def test_get_posts_by_user():
     """Check if posts by user are loaded correctly"""
-    posts_found = get_posts_by_user(POSTS, 'larry')
-    assert len(posts_found) == 2, "Ошибка поиска по пользователю"
-    assert posts_found[0]['poster_name'] == 'larry', "Ошибка поиска по пользователю"
+    posts = get_posts_by_user(POSTS, 'larry')
+    keys_to_check = ('poster_name', 'poster_avatar', 'pic', 'content', 'views_count', 'likes_count', 'pk')
+    assert isinstance(posts, list), "Ошибка поиска по пользователю: полученный объект не является списком"
+    assert tuple(posts[0].keys()) == keys_to_check, "Ошибка поиска по пользователю: элементы списка не содержат нужные ключи"
 
 def test_get_post_by_id():
     """Check if posts by id are found correctly"""
     post = get_post_by_id(POSTS, 1)
-    assert len(post) == 7, "Ошибка поиска по id"
-    assert post['pk'] == 1, "Ошибка поиска по id"
+    keys_to_check = ('poster_name', 'poster_avatar', 'pic', 'content', 'views_count', 'likes_count', 'pk')
+    assert isinstance(post, dict), "Ошибка поиска по id: полученный объект не явлется словарем"
+    assert tuple(post.keys()) == keys_to_check, "Ошибка поиска по id: объект не содержит нужных ключей"
 
 def test_get_posts_for_word():
     """Check if posts are found correctly"""
     posts = get_posts_for_word(POSTS, 'вышел')
-    assert len(posts) == 1, "Ошибка поиска по слову"
-    assert posts[0]['pk'] == 2, "Ошибка поиска по id"
+    keys_to_check = ('poster_name', 'poster_avatar', 'pic', 'content', 'views_count', 'likes_count', 'pk')
+    assert isinstance(posts, list), "Ошибка поиска по слову: полученный объект не является списком"
+    assert tuple(posts[0].keys()) == keys_to_check, "Ошибка поиска по слову: элементы списка не содержат нужные ключи"
 
 def test_get_comments_by_id():
     """Check if comments are found correctly by post id"""
-    assert len(get_comments_by_post_id(COMMENTS, 2)) == 4, "Ошибка загрузки комментариев"
+    comments = get_comments_by_post_id(COMMENTS, 2)
+    keys_to_check = ('post_id', 'commenter_name', 'comment', 'pk')
+    assert isinstance(comments, list), "Ошибка загрузки комментариев: полученный объект не является списком"
+    assert tuple(comments[0].keys()) == keys_to_check, "Ошибка загрузки комментариев: элементы списка не содержат нужные ключи"

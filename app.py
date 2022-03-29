@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from utils import *
 from json import JSONDecodeError
+from api.api import api_blueprint
 
 # Key variables
 POSTS = 'data/data.json'
@@ -10,7 +11,9 @@ BOOKMARKS = 'data/bookmarks.json'
 # Initiate Flask app
 app = Flask(__name__, static_folder='static')
 app.debug = True
+app.config['JSON_AS_ASCII'] = False
 
+app.register_blueprint(api_blueprint, url_prefix='/api')
 
 # Key post views
 @app.route("/")
@@ -99,6 +102,20 @@ def bookmarks_remove(post_id):
     bookmarks.remove(post_to_remove)
     write_data(BOOKMARKS, bookmarks)
     return redirect("/", code = 302)
+
+# API
+# @app.route("/api/posts")
+# def api_posts():
+#     """Return posts as json"""
+#     posts = get_data(POSTS)
+#     return jsonify(posts)
+#
+#
+# @app.route("/api/posts/<int:post_id>")
+# def api_post_by_id(post_id):
+#     """Return post as json"""
+#     post = get_post_by_id(POSTS, post_id)
+#     return jsonify(post)
 
 
 if __name__ == '__main__':

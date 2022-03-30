@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect
 from utils import *
 from json import JSONDecodeError
 from api.api import api_blueprint
@@ -13,7 +13,7 @@ POSTS = app.config.get('POSTS')
 COMMENTS = app.config.get('COMMENTS')
 BOOKMARKS = app.config.get('BOOKMARKS')
 
-# Key post views
+# Post views
 @app.route("/")
 def main():
     """Main page with all the posts"""
@@ -53,7 +53,7 @@ def posts_by_tag(tag_name):
 
 @app.route("/search")
 def posts_search():
-    """Page with all the posts containing some word"""
+    """Page with all the posts containing searhed word or phrase"""
     try:
         searched_word = request.args.get('s')
         posts_found = get_posts_for_word(POSTS, searched_word)

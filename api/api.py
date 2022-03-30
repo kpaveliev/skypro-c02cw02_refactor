@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, render_template
 from utils import *
 
 # Key variables
@@ -8,15 +8,15 @@ POSTS = 'data/data.json'
 api_blueprint = Blueprint('api_blueprint', __name__)
 
 # Create views
-@api_blueprint.route("/posts")
+@api_blueprint.route("/posts/")
 def api_posts():
     """Return posts as json"""
     posts = get_data(POSTS)
-    return jsonify(posts)
+    return jsonify(posts), {'Content-type': 'application/json; charset=utf-8'}
 
 
 @api_blueprint.route("/posts/<int:post_id>")
 def api_post_by_id(post_id):
-    """Return post as json"""
+    """Return specified post as json"""
     post = get_post_by_id(POSTS, post_id)
-    return jsonify(post)
+    return jsonify(post), {'Content-type': 'application/json; charset=utf-8'}

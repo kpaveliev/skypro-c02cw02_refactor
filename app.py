@@ -8,7 +8,7 @@ POSTS = 'data/data.json'
 COMMENTS = 'data/comments.json'
 BOOKMARKS = 'data/bookmarks.json'
 
-# Initiate Flask app
+# Initiate Flask app, config and register blueprints
 app = Flask(__name__, static_folder='static')
 app.debug = True
 app.config['JSON_AS_ASCII'] = False
@@ -102,20 +102,6 @@ def bookmarks_remove(post_id):
     bookmarks.remove(post_to_remove)
     write_data(BOOKMARKS, bookmarks)
     return redirect("/", code = 302)
-
-# API
-# @app.route("/api/posts")
-# def api_posts():
-#     """Return posts as json"""
-#     posts = get_data(POSTS)
-#     return jsonify(posts)
-#
-#
-# @app.route("/api/posts/<int:post_id>")
-# def api_post_by_id(post_id):
-#     """Return post as json"""
-#     post = get_post_by_id(POSTS, post_id)
-#     return jsonify(post)
 
 
 if __name__ == '__main__':

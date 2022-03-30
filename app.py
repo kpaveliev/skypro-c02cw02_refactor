@@ -3,17 +3,15 @@ from utils import *
 from json import JSONDecodeError
 from api.api import api_blueprint
 
-# Key variables
-POSTS = 'data/data.json'
-COMMENTS = 'data/comments.json'
-BOOKMARKS = 'data/bookmarks.json'
-
-# Initiate Flask app, config and register blueprints
+# Initiate Flask app, load config and register blueprints
 app = Flask(__name__, static_folder='static')
-app.debug = True
-app.config['JSON_AS_ASCII'] = False
-
+app.config.from_pyfile('config.py')
 app.register_blueprint(api_blueprint, url_prefix='/api')
+
+# Key variables
+POSTS = app.config.get('POSTS')
+COMMENTS = app.config.get('COMMENTS')
+BOOKMARKS = app.config.get('BOOKMARKS')
 
 # Key post views
 @app.route("/")
@@ -91,17 +89,23 @@ def bookmarks_add(post_id):
             bookmarks.append(post_to_add)
             write_data(BOOKMARKS, bookmarks)
     finally:
-        return redirect("/", code = 302)
+        # Get page url to redirect to the same page
+        url_redirect = request.referrer
+        return redirect(url_redirect, code = 302)
 
 
 @app.route("/bookmarks/remove/<int:post_id>")
 def bookmarks_remove(post_id):
     """Remove the post from the bookmarks"""
+    # Get post to remove
     post_to_remove = get_post_by_id(BOOKMARKS, post_id)
+    # Remove post from the bookmarks
     bookmarks = get_data(BOOKMARKS)
     bookmarks.remove(post_to_remove)
     write_data(BOOKMARKS, bookmarks)
-    return redirect("/", code = 302)
+    # Get page url to redirect to the same page
+    url_redirect = request.referrer
+    return redirect(url_redirect, code = 302)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 import pytest
-import os, sys
+import os
+import sys
 path = os.path.abspath('.')
 sys.path.insert(1, path)
 from app import app

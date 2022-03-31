@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, current_app
-from utils import *
+from utils import get_data, get_post_by_id
 
 # Create a Blueprint object
 api_blueprint = Blueprint('api_blueprint', __name__)
+
 
 # Create views
 @api_blueprint.route("/posts/")

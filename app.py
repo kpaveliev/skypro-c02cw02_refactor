@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect
-from utils import *
+from utils import (get_data, write_data,
+                   get_post_by_id, get_posts_by_user, get_posts_for_word,
+                   get_comments_by_post_id, format_post_tags)
 from json import JSONDecodeError
 from api.api import api_blueprint
 
@@ -12,6 +14,7 @@ app.register_blueprint(api_blueprint, url_prefix='/api')
 POSTS = app.config.get('POSTS')
 COMMENTS = app.config.get('COMMENTS')
 BOOKMARKS = app.config.get('BOOKMARKS')
+
 
 # Post views
 @app.route("/")
@@ -53,7 +56,7 @@ def posts_by_tag(tag_name):
 
 @app.route("/search")
 def posts_search():
-    """Page with all the posts containing searhed word or phrase"""
+    """Page with all the posts containing searched word or phrase"""
     try:
         searched_word = request.args.get('s')
         posts_found = get_posts_for_word(POSTS, searched_word)
@@ -80,18 +83,18 @@ def bookmarks_add(post_id):
         bookmarks = get_data(BOOKMARKS)
     except JSONDecodeError:
         # If bookmarks.json is empty, declare empty variable
-        bookmarks =[]
+        bookmarks = []
     else:
-        # Add post to bookmarks if it isn't added already
+        # Add post to the bookmarks if it isn't added already
         post_check = get_post_by_id(BOOKMARKS, post_id)
-        if post_check == None:
+        if post_check is None:
             post_to_add = get_post_by_id(POSTS, post_id)
             bookmarks.append(post_to_add)
             write_data(BOOKMARKS, bookmarks)
     finally:
         # Get page url to redirect to the same page
         url_redirect = request.referrer
-        return redirect(url_redirect, code = 302)
+        return redirect(url_redirect, code=302)
 
 
 @app.route("/bookmarks/remove/<int:post_id>")
@@ -105,7 +108,7 @@ def bookmarks_remove(post_id):
     write_data(BOOKMARKS, bookmarks)
     # Get page url to redirect to the same page
     url_redirect = request.referrer
-    return redirect(url_redirect, code = 302)
+    return redirect(url_redirect, code=302)
 
 
 if __name__ == '__main__':

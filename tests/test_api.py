@@ -1,18 +1,13 @@
-import pytest
-import os
-import sys
-path = os.path.abspath('.')
-sys.path.insert(1, path)
-from app import app
+import tests.conftest
+from run import app
 
 # Define tests for view functions
-def test_api_posts():
+def test_api_posts(posts_keys):
     """Check if json with all the posts loads correctly"""
     response = app.test_client().get('/api/posts/')
     posts = response.json
-    keys_to_check = ('poster_name', 'poster_avatar', 'pic', 'content', 'views_count', 'likes_count', 'pk')
     assert isinstance(posts, list), "Ошибка API (загрузка постов): выгружается не список"
-    assert sorted(tuple(posts[0].keys())) == sorted(keys_to_check), "Ошибка API (загрузка постов): нет нужных ключей"
+    assert set(posts[0].keys()) == posts_keys, "Ошибка API (загрузка постов): нет нужных ключей"
 
 
 def test_api_post_by_id():
